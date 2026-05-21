@@ -1,0 +1,42 @@
+dataset:
+  source: "generated"
+  generated_dir: "../../data/pisinger_t5/train/type_05_almost_strongly_corr"
+  val_dir: "../../data/pisinger_t5/val/type_05_almost_strongly_corr"
+  test_dir: "../../data/pisinger_t5/test/type_05_almost_strongly_corr"
+  k: 16
+  train_ratio: 0.8
+  val_ratio: 0.1
+
+model:
+  hidden_dim: 256
+  num_layers: 4
+  dropout: 0.15
+  conv_type: "gin"
+  use_global_ctx: true
+  dropout_attn: 0.1
+
+training:
+  epochs: 80
+  batch_size: 16
+  lr: 0.0005
+  warmup_epochs: 5
+  early_stop_wait: 60
+  seed: 2025
+
+graph:
+  type: "knn"
+  max_conflict_edges: null # only for conflict graph
+
+decode:
+  strategy: "greedy_prob"        # greedy_prob | dp_subset | beam_search | greedy_ratio
+  top_m: 40                      # only for dp_subset
+  beam_width: 10                  # only for beam_search
+
+device: "auto"                   # auto, cpu, cuda
+
+paths:
+  save_path: "../../results/GNN_Pisinger_t5/pisinger_random/gnn_random_pisinger.pt"
+  log_dir: "../../results/GNN_Pisinger_t5/pisinger_random"
+
+
+

@@ -1,0 +1,38 @@
+dataset:
+  train_dir: "../../../data/cross_scale/train_small"
+  val_dir: "../../../data/cross_scale/val_small"
+  test_dir: "../../../data/cross_scale/test_small"
+
+model:
+  hidden_dim: 128
+  num_layers: 3
+
+rl:
+  gamma: 0.99
+  lr: 0.0002
+  batch_size: 128
+  buffer_size: 100000
+  min_buffer_size: 5000
+  target_update_steps: 1000
+  eps_start: 1.0
+  eps_end: 0.05
+  eps_decay_steps: 40000
+  grad_clip: 1.0
+  train_freq: 4
+  train_steps: 60000
+  target_tau: 0.01
+
+graph:
+  type: "full"
+  k: 16
+  max_conflict_edges: null
+
+seed: 2025
+
+device: "auto"  # auto, cpu, cuda
+
+paths:
+  out_dir: "../../../results/S2V_DQN/s2v_dqn_full"
+
+
+

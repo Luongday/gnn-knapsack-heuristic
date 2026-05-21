@@ -1,0 +1,41 @@
+dataset:
+  train_dir: "../../../data/cross_scale/train_small"
+  val_dir: "../../../data/cross_scale/val_small"
+  test_dir: "../../../data/cross_scale/test_small"
+  k: 16
+  train_ratio: 0.8
+  val_ratio: 0.1
+
+model:
+  hidden_dim: 128
+  num_layers: 3
+  dropout: 0.1
+  conv_type: "gin"
+  use_global_ctx: true
+
+training:
+  epochs: 50
+  batch_size: 32
+  lr: 0.00002
+  baseline_update_every: 1
+  baseline_type: "none"          # none / hard / polyak
+  baseline_tau: 0.95               # only for polyak
+  hard_update_threshold: 0.001     # only for hard
+  entropy_beta: 0.002
+  grad_accum: 1
+  grad_clip: 1.0
+  pretrained: "../../../results/ablation/gnn_knn/gnn_best.pt"
+  min_delta: 0.001
+  early_stop_patience: 40
+
+graph:
+  type: "knn"
+  max_conflict_edges: null
+
+seed: 2025
+
+device: "auto"
+
+paths:
+  out_dir: "../../../results/GNN_REINFORCE/"
+  save_path: "../../../results/GNN_REINFORCE/gnn_reinforce_knn/gnn_reinforce_knn.pt"

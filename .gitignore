@@ -1,0 +1,17 @@
+.venv/
+venv/
+
+__pycache__/
+*.pyc
+*.pyo
+
+logs/
+
+.vscode/
+.idea/
+
+data/
+
+plots/
+
+results/

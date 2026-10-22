@@ -88,7 +88,11 @@ def dp_subset_decode(
         if selected == 1:
             x_hat[top_indices[local_i]] = 1.0
 
-    return x_hat
+    # Fill leftover capacity by prob: when the optimum holds more than m items
+    # (large n), the top-m DP alone leaves most of the knapsack empty.
+    scores = probs.detach().cpu().clone()
+    scores[x_hat.bool()] = float("inf")
+    return greedy_feasible_decode(scores, W, C)
 
 # def dp_subset_decode(
 #     probs: torch.Tensor,

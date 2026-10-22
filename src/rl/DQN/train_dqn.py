@@ -179,6 +179,7 @@ def main():
         # Ghi đè bằng CLI
         cli_dict = {k: v for k, v in vars(args).items() if v is not None and k != "config"}
         for key, value in cli_dict.items():
+            key = "train_dir" if key == "dataset_dir" else key  # YAML names it train_dir
             if key in config.rl:
                 config.rl[key] = value
             elif key in config.model:

@@ -268,7 +268,7 @@ def main() -> None:
 
     # Auto-generate plots after merge
     compare_dir = results_dir / "compare"
-    plots_dir   = Path(__file__).resolve().parents[2] / "plots"
+    plots_dir   = results_dir / "plots"
     plots_dir.mkdir(parents=True, exist_ok=True)
     if (compare_dir / "summary.json").exists():
         run_cmd("Generate Plots", [

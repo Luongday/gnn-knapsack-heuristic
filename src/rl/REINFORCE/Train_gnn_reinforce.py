@@ -451,7 +451,7 @@ def main() -> None:
     elif train_cfg.pretrained:
         print(f"Warm starting from {train_cfg.pretrained}")
         pretrained = load_checkpoint(train_cfg.pretrained, device=device, dropout=model_cfg.dropout)
-        model.load_state_dict(pretrained.state_dict(), strict=False)
+        model.load_state_dict(pretrained.state_dict())  # strict: arch mismatch must fail loudly
 
     # Baseline network (still created, may not be used if baseline_type='none')
     baseline = KnapsackGNN(
@@ -606,6 +606,11 @@ def main() -> None:
     print(f"\n{'=' * 115}")
     print(f"TRAINING COMPLETE - {total_time:.1f}s")
     print(f"  Best val ratio: {best_val_ratio:.4f} @ epoch {best_epoch}")
+    if best_epoch == 0:
+        # Val never improved (e.g. greedy decode selects nothing): keep last weights
+        # so downstream evaluation still has a model to load.
+        print("  WARNING: val ratio never improved; saving final-epoch model")
+        save_checkpoint(model, save_path)
 
     print(f"\n=== TEST SET EVALUATION ===")
     best_model_path = save_path

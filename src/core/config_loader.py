@@ -25,7 +25,13 @@ def resolve_device(device_str: str = "auto") -> "torch.device":
 
 
 class ConfigDict(dict):
-    """Dictionary that supports dot-notation access."""
+    """Dictionary that supports dot-notation access (nested dicts included)."""
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for k, v in self.items():
+            if isinstance(v, dict) and not isinstance(v, ConfigDict):
+                self[k] = ConfigDict(v)
+
     def __getattr__(self, key):
         try:
             return self[key]

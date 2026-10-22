@@ -7,7 +7,7 @@ scipy>=1.10.0
 # Data & utilities
 pandas>=2.0.0
 openpyxl>=3.1.0
-PuLP>=2.7.0
+PuLP>=2.7.0,<4  # 4.x removed LpVariable(cat=) and bundled PULP_CBC_CMD
 
 # Visualization
 matplotlib>=3.7.0

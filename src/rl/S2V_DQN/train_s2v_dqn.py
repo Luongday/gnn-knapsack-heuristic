@@ -421,10 +421,8 @@ def main():
     test_ratio, test_feas = None, None
     best_ckpt = out_dir / f"s2v_dqn_{graph_cfg.type}_best.pt"
     if test_set and best_ckpt.exists():
-        from s2v_model import S2VQNetwork as _S2V
-        best_model = _S2V(in_dim=7, hidden_dim=model_cfg.hidden_dim,
-                          num_layers=model_cfg.num_layers, dropout=0.0).to(device)
-        best_model.load_state_dict(torch.load(best_ckpt, map_location=device)["model_state_dict"])
+        from s2v_model import load_s2v_checkpoint
+        best_model = load_s2v_checkpoint(best_ckpt, device)
         test_metrics = evaluate_on_set(best_model, test_set, device,
                                        k=graph_cfg.k, limit=len(test_set),
                                        graph_type=graph_cfg.type,

@@ -1,7 +1,7 @@
 dataset:
-  train_dir: "../../../data/cross_scale/train_small"
-  val_dir: "../../../data/cross_scale/val_small"
-  test_dir: "../../../data/cross_scale/test_small"
+  train_dir: "data/cross_scale/train_small"
+  val_dir: "data/cross_scale/val_small"
+  test_dir: "data/cross_scale/test_small"
   train_ratio: 0.8
   val_ratio: 0.1
 
@@ -28,4 +28,4 @@ seed: 2025
 device: "auto"  # auto, cpu, cuda
 
 paths:
-  out_dir: "../../../results/DQN"
+  out_dir: "results/DQN"

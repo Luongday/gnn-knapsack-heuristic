@@ -1,8 +1,8 @@
 dataset:
   source: "generated"
-  generated_dir: "../../data/pisinger_t5/train/type_05_almost_strongly_corr"
-  val_dir: "../../data/pisinger_t5/val/type_05_almost_strongly_corr"
-  test_dir: "../../data/pisinger_t5/test/type_05_almost_strongly_corr"
+  generated_dir: "data/pisinger_t5/train/type_05_almost_strongly_corr"
+  val_dir: "data/pisinger_t5/val/type_05_almost_strongly_corr"
+  test_dir: "data/pisinger_t5/test/type_05_almost_strongly_corr"
   k: 16
   train_ratio: 0.8
   val_ratio: 0.1
@@ -35,8 +35,8 @@ decode:
 device: "auto"                   # auto, cpu, cuda
 
 paths:
-  save_path: "../../results/GNN_Pisinger_t5/pisinger_random/gnn_random_pisinger.pt"
-  log_dir: "../../results/GNN_Pisinger_t5/pisinger_random"
+  save_path: "results/GNN_Pisinger_t5/pisinger_random/gnn_random_pisinger.pt"
+  log_dir: "results/GNN_Pisinger_t5/pisinger_random"
 
 
 

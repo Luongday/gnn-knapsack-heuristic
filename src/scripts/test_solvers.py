@@ -305,6 +305,15 @@ class TestReinforceSample:
         assert log_p.item() > -1e-3
 
 
+class TestConfigDict:
+    def test_nested_dicts_get_dot_access(self):
+        # RL trainers build their CLI config as ConfigDict({...nested dicts...})
+        from src.core.config_loader import ConfigDict
+        cfg = ConfigDict({"paths": {"out_dir": "x", "deep": {"k": 1}}})
+        assert cfg.paths.out_dir == "x"
+        assert cfg.paths.deep.k == 1
+
+
 # ---------------------------------------------------------------------------
 # DQN Environment
 # ---------------------------------------------------------------------------

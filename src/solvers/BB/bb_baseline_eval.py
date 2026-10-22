@@ -13,11 +13,11 @@ from typing import List, Optional, Tuple
 import numpy as np
 
 _HERE = Path(__file__).resolve().parent
-for _p in [str(_HERE), str(_HERE.parent)]:
+for _p in [str(_HERE), str(_HERE.parent), str(_HERE.parents[2])]:
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-from GNNForKnapSack.src.core.instance_loader import load_instance, list_instances
+from src.core.instance_loader import load_instance, list_instances
 
 DEFAULT_MAX_NODES   = 2_000_000
 DEFAULT_TIMEOUT_SEC = 60.0

@@ -39,36 +39,36 @@ TIGHT_OPT = 50  # only item 0
 
 class TestDP:
     def test_simple(self):
-        from GNNForKnapSack.src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp
+        from src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp
         sol = solve_knapsack_dp(SIMPLE_W, SIMPLE_V, SIMPLE_C)
         value = sum(v * s for v, s in zip(SIMPLE_V, sol))
         assert value == SIMPLE_OPT, f"Expected {SIMPLE_OPT}, got {value}"
 
     def test_all_fit(self):
-        from GNNForKnapSack.src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp
+        from src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp
         sol = solve_knapsack_dp(ALL_FIT_W, ALL_FIT_V, ALL_FIT_C)
         value = sum(v * s for v, s in zip(ALL_FIT_V, sol))
         assert value == ALL_FIT_OPT
 
     def test_tight(self):
-        from GNNForKnapSack.src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp
+        from src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp
         sol = solve_knapsack_dp(TIGHT_W, TIGHT_V, TIGHT_C)
         value = sum(v * s for v, s in zip(TIGHT_V, sol))
         assert value == TIGHT_OPT
 
     def test_empty(self):
-        from GNNForKnapSack.src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp
+        from src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp
         sol = solve_knapsack_dp([], [], 100)
         assert sol == []
 
     def test_feasibility(self):
-        from GNNForKnapSack.src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp
+        from src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp
         sol = solve_knapsack_dp(SIMPLE_W, SIMPLE_V, SIMPLE_C)
         weight = sum(w * s for w, s in zip(SIMPLE_W, sol))
         assert weight <= SIMPLE_C, f"Weight {weight} exceeds capacity {SIMPLE_C}"
 
     def test_both_implementations_agree(self):
-        from GNNForKnapSack.src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp_python, solve_knapsack_dp_np
+        from src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp_python, solve_knapsack_dp_np
         sol1 = solve_knapsack_dp_python(SIMPLE_W, SIMPLE_V, SIMPLE_C)
         sol2 = solve_knapsack_dp_np(SIMPLE_W, SIMPLE_V, SIMPLE_C)
         v1 = sum(v * s for v, s in zip(SIMPLE_V, sol1))
@@ -82,7 +82,7 @@ class TestDP:
 
 class TestGreedy:
     def test_feasibility(self):
-        from GNNForKnapSack.src.solvers.Greedy.greedy_baseline_eval import solve_knapsack_greedy
+        from src.solvers.Greedy.greedy_baseline_eval import solve_knapsack_greedy
         W = np.array(SIMPLE_W, dtype=np.int32)
         V = np.array(SIMPLE_V, dtype=np.int32)
         selected = solve_knapsack_greedy(W, V, SIMPLE_C)
@@ -90,7 +90,7 @@ class TestGreedy:
         assert weight <= SIMPLE_C
 
     def test_all_fit(self):
-        from GNNForKnapSack.src.solvers.Greedy.greedy_baseline_eval import solve_knapsack_greedy
+        from src.solvers.Greedy.greedy_baseline_eval import solve_knapsack_greedy
         W = np.array(ALL_FIT_W, dtype=np.int32)
         V = np.array(ALL_FIT_V, dtype=np.int32)
         selected = solve_knapsack_greedy(W, V, ALL_FIT_C)
@@ -98,13 +98,13 @@ class TestGreedy:
         assert value == ALL_FIT_OPT
 
     def test_empty(self):
-        from GNNForKnapSack.src.solvers.Greedy.greedy_baseline_eval import solve_knapsack_greedy
+        from src.solvers.Greedy.greedy_baseline_eval import solve_knapsack_greedy
         selected = solve_knapsack_greedy(np.array([], dtype=np.int32),
                                           np.array([], dtype=np.int32), 100)
         assert selected == []
 
     def test_returns_sorted(self):
-        from GNNForKnapSack.src.solvers.Greedy.greedy_baseline_eval import solve_knapsack_greedy
+        from src.solvers.Greedy.greedy_baseline_eval import solve_knapsack_greedy
         W = np.array([10, 20, 30, 5, 15], dtype=np.int32)
         V = np.array([60, 100, 120, 40, 80], dtype=np.int32)
         selected = solve_knapsack_greedy(W, V, 50)
@@ -117,7 +117,7 @@ class TestGreedy:
 
 class TestGA:
     def test_feasibility(self):
-        from GNNForKnapSack.src.solvers.GA.ga_baseline_eval import solve_knapsack_ga
+        from src.solvers.GA.ga_baseline_eval import solve_knapsack_ga
         W = np.array(SIMPLE_W, dtype=np.int32)
         V = np.array(SIMPLE_V, dtype=np.int32)
         selected = solve_knapsack_ga(W, V, SIMPLE_C, population_size=30,
@@ -126,7 +126,7 @@ class TestGA:
         assert weight <= SIMPLE_C
 
     def test_finds_optimal_simple(self):
-        from GNNForKnapSack.src.solvers.GA.ga_baseline_eval import solve_knapsack_ga
+        from src.solvers.GA.ga_baseline_eval import solve_knapsack_ga
         W = np.array(SIMPLE_W, dtype=np.int32)
         V = np.array(SIMPLE_V, dtype=np.int32)
         selected = solve_knapsack_ga(W, V, SIMPLE_C, population_size=50,
@@ -135,7 +135,7 @@ class TestGA:
         assert value == SIMPLE_OPT, f"Expected {SIMPLE_OPT}, got {value}"
 
     def test_reproducible(self):
-        from GNNForKnapSack.src.solvers.GA.ga_baseline_eval import solve_knapsack_ga
+        from src.solvers.GA.ga_baseline_eval import solve_knapsack_ga
         W = np.array(SIMPLE_W, dtype=np.int32)
         V = np.array(SIMPLE_V, dtype=np.int32)
         s1 = solve_knapsack_ga(W, V, SIMPLE_C, seed=42)
@@ -150,7 +150,7 @@ class TestGA:
 class TestDecodeUtils:
     def test_greedy_feasible_decode(self):
         import torch
-        from GNNForKnapSack.src.core.decode_utils import greedy_feasible_decode
+        from src.core.decode_utils import greedy_feasible_decode
         probs = torch.tensor([0.9, 0.1, 0.7, 0.5, 0.8])
         weights = torch.tensor([10., 20., 15., 25., 12.])
         capacity = 40.0
@@ -160,21 +160,34 @@ class TestDecodeUtils:
 
     def test_greedy_ratio_decode(self):
         import torch
-        from GNNForKnapSack.src.core.decode_utils import greedy_ratio_decode
+        from src.core.decode_utils import greedy_ratio_decode
         values = torch.tensor([60., 100., 120.])
         weights = torch.tensor([10., 20., 30.])
         x = greedy_ratio_decode(values, weights, 50.0)
         total_w = (x * weights).sum().item()
         assert total_w <= 50.0 + 1e-6
 
+    @pytest.mark.parametrize("strategy", ["beam_search", "diversified_beam"])
+    def test_beam_decodes_rank_by_value(self, strategy):
+        import torch
+        from src.core.decode_utils import decode
+        # Highest-prob pair {0,1} is worth 160; optimum {1,2} is worth 220.
+        probs = torch.tensor([0.9, 0.8, 0.7])
+        weights = torch.tensor([float(w) for w in SIMPLE_W])
+        values = torch.tensor([float(v) for v in SIMPLE_V])
+        x = decode(probs, weights, float(SIMPLE_C), strategy=strategy,
+                   values=values, beam_width=5)
+        assert (x * weights).sum().item() <= SIMPLE_C + 1e-6
+        assert (x * values).sum().item() == SIMPLE_OPT
+
     def test_compute_ratio(self):
-        from GNNForKnapSack.src.core.decode_utils import compute_ratio
+        from src.core.decode_utils import compute_ratio
         assert compute_ratio(90, 100) == 0.9
         assert compute_ratio(100, 100) == 1.0
         assert compute_ratio(50, 0) is None
 
     def test_compute_gap(self):
-        from GNNForKnapSack.src.core.decode_utils import compute_gap
+        from src.core.decode_utils import compute_gap
         assert abs(compute_gap(90, 100) - 0.1) < 1e-6
         assert compute_gap(100, 100) == 0.0
 
@@ -185,7 +198,7 @@ class TestDecodeUtils:
 
 class TestInstanceLoader:
     def test_load_save_roundtrip(self):
-        from GNNForKnapSack.src.core.instance_loader import load_instance
+        from src.core.instance_loader import load_instance
         with tempfile.TemporaryDirectory() as tmpdir:
             path = Path(tmpdir) / "instance_0000.npz"
             W = np.array([10, 20, 30], dtype=np.int32)
@@ -198,8 +211,17 @@ class TestInstanceLoader:
             np.testing.assert_array_equal(V, V2)
             assert C2 == 50
 
+    def test_dp_value_fallback_uses_values(self):
+        from src.core.instance_loader import load_instance_with_solution
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "instance_0000.npz"
+            np.savez(path, weights=np.array(SIMPLE_W), values=np.array(SIMPLE_V),
+                     capacity=np.int32(SIMPLE_C), solution=np.array([0, 1, 1]))
+            *_, dp_value = load_instance_with_solution(path)
+            assert dp_value == SIMPLE_OPT
+
     def test_list_instances(self):
-        from GNNForKnapSack.src.core.instance_loader import list_instances
+        from src.core.instance_loader import list_instances
         with tempfile.TemporaryDirectory() as tmpdir:
             for i in range(5):
                 np.savez(Path(tmpdir) / f"instance_{i:04d}.npz",
@@ -209,7 +231,7 @@ class TestInstanceLoader:
             assert len(files) == 5
 
     def test_list_instances_limit(self):
-        from GNNForKnapSack.src.core.instance_loader import list_instances
+        from src.core.instance_loader import list_instances
         with tempfile.TemporaryDirectory() as tmpdir:
             for i in range(10):
                 np.savez(Path(tmpdir) / f"instance_{i:04d}.npz",
@@ -225,7 +247,7 @@ class TestInstanceLoader:
 
 class TestGraphBuilder:
     def test_output_shape(self):
-        from GNNForKnapSack.src.gnn.Knapsack_GNN.Graph_builder import build_knapsack_graph
+        from src.gnn.Knapsack_GNN.Graph_builder import build_knapsack_graph
         data = build_knapsack_graph(
             weights=[10, 20, 30],
             values=[60, 100, 120],
@@ -239,7 +261,7 @@ class TestGraphBuilder:
         assert data.cap.item() == 50
 
     def test_inference_graph(self):
-        from GNNForKnapSack.src.gnn.Knapsack_GNN.Graph_builder import build_knapsack_graph_inference
+        from src.gnn.Knapsack_GNN.Graph_builder import build_knapsack_graph_inference
         data = build_knapsack_graph_inference(
             weights=[10, 20, 30],
             values=[60, 100, 120],
@@ -250,7 +272,7 @@ class TestGraphBuilder:
         assert data.y.sum().item() == 0
 
     def test_feature_values(self):
-        from GNNForKnapSack.src.gnn.Knapsack_GNN.Graph_builder import build_knapsack_graph
+        from src.gnn.Knapsack_GNN.Graph_builder import build_knapsack_graph
         data = build_knapsack_graph(
             weights=[10, 20, 30],
             values=[60, 100, 120],
@@ -268,7 +290,7 @@ class TestGraphBuilder:
 
 class TestDQNEnv:
     def test_feasibility_enforced(self):
-        from GNNForKnapSack.src.rl.DQN.dqn_env import KnapsackEnv
+        from src.rl.DQN.dqn_env import KnapsackEnv
         env = KnapsackEnv(
             weights=np.array([100, 200, 300]),
             values=np.array([50, 100, 150]),
@@ -281,7 +303,7 @@ class TestDQNEnv:
         assert env.compute_solution_weight() <= 100 + 1e-6
 
     def test_state_dim(self):
-        from GNNForKnapSack.src.rl.DQN.dqn_env import KnapsackEnv
+        from src.rl.DQN.dqn_env import KnapsackEnv
         env = KnapsackEnv(
             weights=np.array([10, 20, 30]),
             values=np.array([60, 100, 120]),
@@ -292,7 +314,7 @@ class TestDQNEnv:
         assert s.shape[0] == 14  # 3 + 2 + 9
 
     def test_episode_completes(self):
-        from GNNForKnapSack.src.rl.DQN.dqn_env import KnapsackEnv
+        from src.rl.DQN.dqn_env import KnapsackEnv
         env = KnapsackEnv(
             weights=np.array([10, 20, 30]),
             values=np.array([60, 100, 120]),
@@ -317,9 +339,9 @@ class TestCrossSolver:
 
     def test_all_solvers_feasible(self):
         """Every solver must produce feasible solutions."""
-        from GNNForKnapSack.src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp
-        from GNNForKnapSack.src.solvers.Greedy.greedy_baseline_eval import solve_knapsack_greedy
-        from GNNForKnapSack.src.solvers.GA.ga_baseline_eval import solve_knapsack_ga
+        from src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp
+        from src.solvers.Greedy.greedy_baseline_eval import solve_knapsack_greedy
+        from src.solvers.GA.ga_baseline_eval import solve_knapsack_ga
 
         W = np.array([10, 20, 30, 40, 50], dtype=np.int32)
         V = np.array([60, 100, 120, 140, 160], dtype=np.int32)
@@ -342,9 +364,9 @@ class TestCrossSolver:
 
     def test_no_solver_beats_dp(self):
         """DP is exact — no solver should exceed its value."""
-        from GNNForKnapSack.src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp
-        from GNNForKnapSack.src.solvers.Greedy.greedy_baseline_eval import solve_knapsack_greedy
-        from GNNForKnapSack.src.solvers.GA.ga_baseline_eval import solve_knapsack_ga
+        from src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp
+        from src.solvers.Greedy.greedy_baseline_eval import solve_knapsack_greedy
+        from src.solvers.GA.ga_baseline_eval import solve_knapsack_ga
 
         W = np.array(SIMPLE_W, dtype=np.int32)
         V = np.array(SIMPLE_V, dtype=np.int32)

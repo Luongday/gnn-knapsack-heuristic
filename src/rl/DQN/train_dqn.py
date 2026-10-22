@@ -15,21 +15,21 @@ import torch.nn.functional as F
 
 _HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(_HERE))
-# Add repo parent so 'GNNForKnapSack' package is importable
-_REPO_PARENT = _HERE.parents[3]
-if str(_REPO_PARENT) not in sys.path:
-    sys.path.insert(0, str(_REPO_PARENT))
+# Add repo root so the 'src' package is importable
+_REPO_ROOT = _HERE.parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
 
 from dqn_env import KnapsackEnv
 from dqn_model import QNetwork
 from dqn_replay import ReplayBuffer, Transition
-from GNNForKnapSack.src.core.instance_loader import load_instance, list_instances
-from GNNForKnapSack.src.core.rl_training_logger import RLTrainingLogger
+from src.core.instance_loader import load_instance, list_instances
+from src.core.rl_training_logger import RLTrainingLogger
 
 # Import config loader
 try:
-    from GNNForKnapSack.src.core.config_loader import load_config, ConfigDict, resolve_device
+    from src.core.config_loader import load_config, ConfigDict, resolve_device
 except ImportError:
     print("ERROR: config_loader.py not found.")
     sys.exit(1)

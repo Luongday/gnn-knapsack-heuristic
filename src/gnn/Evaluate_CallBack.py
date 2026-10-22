@@ -17,8 +17,8 @@ try:
 except ImportError:
     import sys
     sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from GNNForKnapSack.src.gnn.Knapsack_GNN.model import KnapsackGNN, save_checkpoint
-    from GNNForKnapSack.src.core.decode_utils import decode as _decode, greedy_ratio_decode
+    from src.gnn.Knapsack_GNN.model import KnapsackGNN, save_checkpoint
+    from src.core.decode_utils import decode as _decode, greedy_ratio_decode
 
 
 class EvaluateCallback:

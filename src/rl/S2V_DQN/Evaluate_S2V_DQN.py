@@ -14,12 +14,12 @@ import numpy as np
 import torch
 
 _HERE = Path(__file__).resolve().parent
-_REPO_PARENT = _HERE.parents[3]  # .../Python/ (parent of GNNForKnapSack)
-for _p in [str(_REPO_PARENT), str(_HERE)]:
+_REPO_ROOT = _HERE.parents[2]
+for _p in [str(_REPO_ROOT), str(_HERE)]:
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-from GNNForKnapSack.src.core.instance_loader import load_instance, list_instances
+from src.core.instance_loader import load_instance, list_instances
 from s2v_env import GraphKnapsackEnv
 from s2v_model import load_s2v_checkpoint
 
@@ -101,7 +101,7 @@ def parse_args():
 
 def main():
     args = parse_args()
-    from GNNForKnapSack.src.core.config_loader import resolve_device
+    from src.core.config_loader import resolve_device
     device = resolve_device(args.device)
 
     mark(f"Loading model: {args.model_path}")

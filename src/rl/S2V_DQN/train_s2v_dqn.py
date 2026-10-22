@@ -18,18 +18,18 @@ from torch_geometric.utils import scatter as pyg_scatter
 
 _HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(_HERE))
-_REPO_PARENT = _HERE.parents[3]
-if str(_REPO_PARENT) not in sys.path:
-    sys.path.insert(0, str(_REPO_PARENT))
+_REPO_ROOT = _HERE.parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
-from GNNForKnapSack.src.core.instance_loader import load_instance, list_instances
+from src.core.instance_loader import load_instance, list_instances
 from s2v_env import GraphKnapsackEnv
 from s2v_model import S2VQNetwork, save_s2v_checkpoint
 from s2v_replay import GraphReplayBuffer, GraphTransition
-from GNNForKnapSack.src.core.rl_training_logger import RLTrainingLogger
+from src.core.rl_training_logger import RLTrainingLogger
 
 try:
-    from GNNForKnapSack.src.core.config_loader import load_config, ConfigDict, resolve_device
+    from src.core.config_loader import load_config, ConfigDict, resolve_device
 except ImportError:
     print("ERROR: config_loader.py not found.")
     sys.exit(1)

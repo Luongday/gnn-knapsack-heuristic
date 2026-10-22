@@ -63,7 +63,7 @@ def load_instance_with_solution(npz_path: Path) -> Tuple[np.ndarray, np.ndarray,
     if opt_raw is not None:
         dp_value = int(np.asarray(opt_raw).reshape(()))
     else:
-        dp_value = int((W * solution).sum()) if solution.any() else 0
+        dp_value = int((V * solution).sum()) if solution.any() else 0
 
     return W, V, C, solution, dp_value
 

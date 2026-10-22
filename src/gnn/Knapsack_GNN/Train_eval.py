@@ -10,7 +10,7 @@ except ImportError:
     import sys
     from pathlib import Path
     sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from GNNForKnapSack.src.core.decode_utils import decode as _decode
+    from src.core.decode_utils import decode as _decode
 
 
 def train_one_epoch(

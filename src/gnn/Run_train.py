@@ -16,12 +16,12 @@ from torch_geometric.loader import DataLoader
 
 _HERE     = Path(__file__).resolve().parent
 _GNN_ROOT = _HERE.parent
-for _p in [str(_GNN_ROOT), str(_HERE)]:
+for _p in [str(_GNN_ROOT.parent), str(_GNN_ROOT), str(_HERE)]:
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
 try:
-    from GNNForKnapSack.src.core.config_loader import (
+    from src.core.config_loader import (
         load_config, build_config_from_cli, ConfigDict, resolve_device,
         get_decode_cfg, DECODE_STRATEGIES,
     )
@@ -29,18 +29,18 @@ except ImportError:
     print("ERROR: config_loader.py not found. Please create it or adjust PYTHONPATH.")
     sys.exit(1)
 
-from GNNForKnapSack.src.gnn.Knapsack_GNN.dataset import (
+from src.gnn.Knapsack_GNN.dataset import (
     GeneratedKnapsack01Dataset,
     KnapsackDataset,
     split_dataset_by_instances,
 )
-from GNNForKnapSack.src.gnn.Knapsack_GNN.model import (
+from src.gnn.Knapsack_GNN.model import (
     KnapsackGNN, save_checkpoint, load_checkpoint,
 )
-from GNNForKnapSack.src.gnn.Knapsack_GNN.Train_eval import (
+from src.gnn.Knapsack_GNN.Train_eval import (
     train_one_epoch, evaluate_node_accuracy,
 )
-from GNNForKnapSack.src.core.decode_utils import (
+from src.core.decode_utils import (
     decode as _decode,
     greedy_ratio_decode,
 )

@@ -13,15 +13,16 @@ import numpy as np
 
 _HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(_HERE))
+sys.path.insert(0, str(_HERE.parents[1]))
 
 from Generate_Hard import (
     generate_hard_dataset, compile_genhard,
     TYPE_NAMES,
 )
-from GNNForKnapSack.src.core.instance_loader import load_instance, list_instances
-from GNNForKnapSack.src.solvers.Greedy.greedy_baseline_eval import solve_knapsack_greedy
-from GNNForKnapSack.src.solvers.GA.ga_baseline_eval import solve_knapsack_ga
-from GNNForKnapSack.src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp
+from src.core.instance_loader import load_instance, list_instances
+from src.solvers.Greedy.greedy_baseline_eval import solve_knapsack_greedy
+from src.solvers.GA.ga_baseline_eval import solve_knapsack_ga
+from src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp
 
 
 def mark(msg: str) -> None:
@@ -205,7 +206,7 @@ def main():
             else:
                 gnn_csv = args.results_dir / f"gnn_type_{t}.csv"
                 gnn_cmd = [
-                    py, str(_HERE.parent / "GNNForKnapSack" / "Evaluate_GNN.py"),
+                    py, str(_HERE.parent / "gnn" / "Evaluate_GNN.py"),
                     "--dataset_dir", str(dataset_dir),
                     "--model_path", str(gnn_model),
                     "--out_csv", str(gnn_csv),

@@ -11,7 +11,7 @@ import numpy as np
 import torch
 from torch_geometric.data import Data
 
-from GNNForKnapSack.src.gnn.Knapsack_GNN.Graph_builder import (
+from src.gnn.Knapsack_GNN.Graph_builder import (
     _build_knn_edges,
     _build_conflict_edges_static,
     _build_random_edges,

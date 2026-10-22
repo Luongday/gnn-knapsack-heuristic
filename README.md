@@ -484,7 +484,7 @@ Mở trình duyệt tại `http://localhost:8501`.
 | Feature dim mismatch (6 vs 7) | Cache dataset cũ | Xóa `processed_dataset.pt` |
 | BB chạy rất lâu | B&B bùng nổ tổ hợp | Thêm `--bb_timeout 30` hoặc `--skip bb` |
 | `AssertionError: Torch not compiled with CUDA` | Máy không có GPU NVIDIA | Dùng `--device cpu` hoặc train trên Colab |
-| `ModuleNotFoundError: GNNForKnapSack` | PYTHONPATH chưa đúng | Chạy lệnh từ thư mục gốc project |
+| `ModuleNotFoundError: No module named 'src'` | Chạy file như module ngoài repo | Chạy `python src/.../x.py` từ thư mục gốc project, hoặc `pytest` từ thư mục gốc |
 
 ---
 

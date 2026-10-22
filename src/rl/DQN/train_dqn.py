@@ -177,7 +177,9 @@ def main():
     if args.config:
         config = load_config(args.config)
         # Ghi đè bằng CLI
-        cli_dict = {k: v for k, v in vars(args).items() if v is not None and k != "config"}
+        # str(): Path overrides end up in the JSON run metadata
+        cli_dict = {k: str(v) if isinstance(v, Path) else v
+                    for k, v in vars(args).items() if v is not None and k != "config"}
         for key, value in cli_dict.items():
             key = "train_dir" if key == "dataset_dir" else key  # YAML names it train_dir
             if key in config.rl:

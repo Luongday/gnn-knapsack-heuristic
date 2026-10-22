@@ -16,3 +16,4 @@ plots/
 
 results/
 *.exe
+src/scripts/genhard

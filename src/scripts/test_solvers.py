@@ -180,6 +180,16 @@ class TestDecodeUtils:
         assert (x * weights).sum().item() <= SIMPLE_C + 1e-6
         assert (x * values).sum().item() == SIMPLE_OPT
 
+    def test_dp_subset_fills_capacity_beyond_top_m(self):
+        import torch
+        from src.core.decode_utils import dp_subset_decode
+        # 10 unit items, room for 8; DP sees only top 2 and must not stop there.
+        probs = torch.linspace(1.0, 0.1, 10)
+        ones = torch.ones(10)
+        x = dp_subset_decode(probs, ones, ones, 8.0, top_m=2)
+        assert x.sum().item() == 8
+        assert x[:8].sum().item() == 8
+
     def test_compute_ratio(self):
         from src.core.decode_utils import compute_ratio
         assert compute_ratio(90, 100) == 0.9

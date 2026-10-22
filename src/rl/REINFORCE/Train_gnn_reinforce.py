@@ -26,6 +26,7 @@ for _p in [str(_REPO_ROOT), str(_GNN_ROOT), str(_HERE)]:
 
 from src.gnn.Knapsack_GNN.dataset import GeneratedKnapsack01Dataset
 from src.gnn.Knapsack_GNN.model import KnapsackGNN, save_checkpoint, load_checkpoint
+from src.core.decode_utils import greedy_feasible_decode
 
 try:
     from src.core.config_loader import load_config, ConfigDict, resolve_device
@@ -59,13 +60,16 @@ def sample_and_repair(
     capacity: float,
     greedy:   bool = False,
 ) -> Tuple[torch.Tensor, torch.Tensor, float]:
-    probs = torch.sigmoid(logits)
-
     if greedy:
-        sampled = (probs > 0.5).float()
-    else:
-        dist = torch.distributions.Bernoulli(probs=probs)
-        sampled = dist.sample()
+        # Same decode as Evaluate_reinforce (greedy_prob): fill by prob until full.
+        # A 0.5 threshold selects nothing while probs are low early in training,
+        # zeroing both val ratio and the baseline reward. Log-prob unused here.
+        selected = greedy_feasible_decode(logits, weights, capacity)
+        value = float((selected * values.detach().cpu()).sum())
+        return selected, torch.zeros((), device=logits.device), value
+
+    probs = torch.sigmoid(logits)
+    sampled = torch.distributions.Bernoulli(probs=probs).sample()
 
     selected = sampled.detach().cpu().clone()
     w_cpu = weights.detach().cpu()
@@ -351,6 +355,7 @@ def main() -> None:
         config = load_config(args.config)
         cli_dict = {k: v for k, v in vars(args).items() if v is not None and k != "config"}
         for key, value in cli_dict.items():
+            key = "train_dir" if key == "dataset_dir" else key  # YAML names it train_dir
             if key in config.training:
                 config.training[key] = value
             elif key in config.model:

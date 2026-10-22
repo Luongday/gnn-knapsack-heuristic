@@ -304,6 +304,19 @@ class TestReinforceSample:
         # log P(all ones) ~ 0; scoring the repaired action would give ~ -20
         assert log_p.item() > -1e-3
 
+    def test_greedy_fills_by_prob_even_when_all_probs_low(self):
+        import torch
+        from src.rl.REINFORCE.Train_gnn_reinforce import sample_and_repair
+        # All probs < 0.5 (typical early in training): a 0.5 threshold would
+        # select nothing; greedy_prob takes items 0, 1 then item 2 overflows.
+        sel, _, value = sample_and_repair(
+            torch.tensor([-1.0, -2.0, -3.0]),
+            torch.tensor(SIMPLE_W, dtype=torch.float32),
+            torch.tensor(SIMPLE_V, dtype=torch.float32), SIMPLE_C, greedy=True,
+        )
+        assert sel.tolist() == [1.0, 1.0, 0.0]
+        assert value == 160
+
 
 class TestConfigDict:
     def test_nested_dicts_get_dot_access(self):

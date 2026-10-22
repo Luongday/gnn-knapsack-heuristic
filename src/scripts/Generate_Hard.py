@@ -144,8 +144,8 @@ def call_genhard(
 
 # Sử dụng DP từ module chung
 import sys
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from GNNForKnapSack.src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp
 
 
 # ---------------------------------------------------------------------------
@@ -260,7 +260,7 @@ def generate_hard_dataset(
 
             # Prebuild PyG graph if requested
             if prebuild_graph:
-                from GNNForKnapSack.src.gnn.Knapsack_GNN.Graph_builder import build_knapsack_graph
+                from src.gnn.Knapsack_GNN.Graph_builder import build_knapsack_graph
                 graph = build_knapsack_graph(
                     W.tolist(), V.tolist(), C, solution,
                     k=16, graph_type="knn"

@@ -32,39 +32,9 @@ def build_sparse_graph(
     graph_type: str = "knn",
     max_conflict_edges: Optional[int] = None,
 ) -> Data:
-    if graph_type != "ring_fallback":
-        return build_knapsack_graph(
-            weights, values, capacity, solution,
-            k=k, graph_type=graph_type, max_conflict_edges=max_conflict_edges
-        )
-
-    # Ring fallback (legacy)
-    w   = torch.tensor(weights,  dtype=torch.float32)
-    v   = torch.tensor(values,   dtype=torch.float32)
-    sol = torch.tensor(solution, dtype=torch.float32)
-    n   = len(weights)
-
-    ratio    = v / (w + 1e-8)
-    w_norm   = w / (w.max() + 1e-8)
-    v_norm   = v / (v.max() + 1e-8)
-    r_norm   = ratio / (ratio.max() + 1e-8)
-    cap_ratio = w / (float(capacity) + 1e-8)
-    cap_util  = torch.full((n,), float(capacity) / (w.sum().item() + 1e-8))
-    item_frac = torch.full((n,), 1.0 / max(n, 1))
-
-    x = torch.stack([w_norm, v_norm, r_norm, cap_ratio, cap_util, item_frac], dim=1)
-
-    k_eff = min(k, max(1, n - 1))
-    src   = torch.arange(n).repeat_interleave(k_eff)
-    offs  = torch.arange(1, k_eff + 1) % n
-    dst   = (torch.arange(n).unsqueeze(1) + offs) % n
-    edge_index = torch.stack([src, dst.reshape(-1)], dim=0)
-
-    return Data(
-        x=x, edge_index=edge_index,
-        y=sol.unsqueeze(1),
-        wts=w, vals=v,
-        cap=torch.tensor([capacity], dtype=torch.float32),
+    return build_knapsack_graph(
+        weights, values, capacity, solution,
+        k=k, graph_type=graph_type, max_conflict_edges=max_conflict_edges
     )
 
 

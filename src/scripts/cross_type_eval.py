@@ -4,7 +4,7 @@ Outputs a tidy CSV (one row per type×strategy) plus a Markdown table to stdout 
 designed for the defense-ready comparison "GNN+greedy_prob vs GNN+dp_subset vs Greedy".
 
 Usage:
-    python -m GNNForKnapSack.src.scripts.cross_type_eval \
+    python -m src.scripts.cross_type_eval \
         --model_path results/GNN_Pisinger_t3/pisinger_kNN/gnn_knn_best.pt \
         --types_root data \
         --strategies greedy_prob dp_subset \
@@ -28,16 +28,16 @@ import numpy as np
 import torch
 
 _HERE = Path(__file__).resolve().parent
-_REPO_PARENT = _HERE.parents[2]
-for _p in [str(_REPO_PARENT), str(_HERE.parent)]:
+_REPO_ROOT = _HERE.parents[1]
+for _p in [str(_REPO_ROOT), str(_HERE.parent)]:
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-from GNNForKnapSack.src.core.config_loader import resolve_device, DECODE_STRATEGIES
-from GNNForKnapSack.src.core.decode_utils import decode, greedy_ratio_decode
-from GNNForKnapSack.src.core.instance_loader import list_instances, load_instance
-from GNNForKnapSack.src.gnn.Knapsack_GNN.Graph_builder import build_knapsack_graph_inference
-from GNNForKnapSack.src.gnn.Knapsack_GNN.model import load_checkpoint
+from src.core.config_loader import resolve_device, DECODE_STRATEGIES
+from src.core.decode_utils import decode, greedy_ratio_decode
+from src.core.instance_loader import list_instances, load_instance
+from src.gnn.Knapsack_GNN.Graph_builder import build_knapsack_graph_inference
+from src.gnn.Knapsack_GNN.model import load_checkpoint
 
 
 def mark(msg: str) -> None:

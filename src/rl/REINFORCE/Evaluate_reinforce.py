@@ -14,15 +14,15 @@ import numpy as np
 import torch
 
 _HERE = Path(__file__).resolve().parent
-_REPO_PARENT = _HERE.parents[3]
-for _p in [str(_REPO_PARENT), str(_HERE.parent), str(_HERE)]:
+_REPO_ROOT = _HERE.parents[2]
+for _p in [str(_REPO_ROOT), str(_HERE.parent), str(_HERE)]:
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-from GNNForKnapSack.src.core.instance_loader import load_instance_with_solution, list_instances
-from GNNForKnapSack.src.gnn.Knapsack_GNN.Graph_builder import build_knapsack_graph_inference
-from GNNForKnapSack.src.core.decode_utils import decode
-from GNNForKnapSack.src.gnn.Knapsack_GNN.model import load_checkpoint
+from src.core.instance_loader import load_instance_with_solution, list_instances
+from src.gnn.Knapsack_GNN.Graph_builder import build_knapsack_graph_inference
+from src.core.decode_utils import decode
+from src.gnn.Knapsack_GNN.model import load_checkpoint
 
 def mark(msg: str) -> None:
     print(f"[REINFORCE-EVAL] {msg}", flush=True)
@@ -120,7 +120,7 @@ def parse_args():
 
 def main():
     args = parse_args()
-    from GNNForKnapSack.src.core.config_loader import resolve_device
+    from src.core.config_loader import resolve_device
     device = resolve_device(args.device)
 
     mark(f"Loading model: {args.model_path}")

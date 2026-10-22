@@ -19,16 +19,16 @@ from torch_geometric.loader import DataLoader
 
 _HERE     = Path(__file__).resolve().parent
 _GNN_ROOT = _HERE.parent
-_REPO_PARENT = _HERE.parents[3]
-for _p in [str(_REPO_PARENT), str(_GNN_ROOT), str(_HERE)]:
+_REPO_ROOT = _HERE.parents[2]
+for _p in [str(_REPO_ROOT), str(_GNN_ROOT), str(_HERE)]:
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-from GNNForKnapSack.src.gnn.Knapsack_GNN.dataset import GeneratedKnapsack01Dataset
-from GNNForKnapSack.src.gnn.Knapsack_GNN.model import KnapsackGNN, save_checkpoint, load_checkpoint
+from src.gnn.Knapsack_GNN.dataset import GeneratedKnapsack01Dataset
+from src.gnn.Knapsack_GNN.model import KnapsackGNN, save_checkpoint, load_checkpoint
 
 try:
-    from GNNForKnapSack.src.core.config_loader import load_config, ConfigDict, resolve_device
+    from src.core.config_loader import load_config, ConfigDict, resolve_device
 except ImportError:
     print("ERROR: config_loader.py not found.")
     sys.exit(1)
@@ -83,14 +83,10 @@ def sample_and_repair(
                 selected[i] = 0
                 total_w -= float(w_cpu[i])
 
-    action_final = selected.to(logits.device)
-
-    eps = 1e-8
-    log_p_per_node = (
-        action_final * torch.log(probs + eps)
-        + (1 - action_final) * torch.log(1 - probs + eps)
-    )
-    log_prob = log_p_per_node.mean()
+    # Score-function gradient must use the action the policy actually sampled;
+    # repair is a deterministic post-processing step folded into the reward.
+    # Sum (not mean) over nodes: joint log-prob of independent Bernoullis.
+    log_prob = torch.distributions.Bernoulli(logits=logits).log_prob(sampled).sum()
 
     value = float((selected * v_cpu).sum())
     return selected, log_prob, value
@@ -258,7 +254,7 @@ class TrainingLogger:
 
 def load_datasets(dataset_cfg, graph_cfg):
     from torch.utils.data import Subset
-    from GNNForKnapSack.src.gnn.Knapsack_GNN.dataset import split_dataset_by_instances
+    from src.gnn.Knapsack_GNN.dataset import split_dataset_by_instances
 
     def create_dataset(root_dir, k, graph_type, max_conflict_edges):
         return GeneratedKnapsack01Dataset.get_lazy(

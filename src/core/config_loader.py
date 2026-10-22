@@ -110,44 +110,50 @@ def get_decode_cfg(config: ConfigDict | dict | None) -> ConfigDict:
     return ConfigDict(merged)
 
 
+def _arg(args: argparse.Namespace, name: str, default: Any) -> Any:
+    """argparse leaves unset flags as None, so getattr's default never applies."""
+    value = getattr(args, name, None)
+    return default if value is None else value
+
+
 def build_config_from_cli(args: argparse.Namespace, default_data_dir: Path, default_save_path: Path) -> ConfigDict:
     """Build ConfigDict from CLI arguments (backward compatibility)."""
-    return ConfigDict({
+    return _dict_to_config({
         "dataset": {
-            "source": getattr(args, "dataset_source", "generated"),
-            "generated_dir": getattr(args, "generated_dir", str(default_data_dir)),
-            "val_dir": getattr(args, "val_dir", None),
-            "test_dir": getattr(args, "test_dir", None),
-            "k": getattr(args, "k", 16),
-            "train_ratio": getattr(args, "train_ratio", 0.8),
-            "val_ratio": getattr(args, "val_ratio", 0.1),
+            "source": _arg(args, "dataset_source", "generated"),
+            "generated_dir": _arg(args, "generated_dir", str(default_data_dir)),
+            "val_dir": _arg(args, "val_dir", None),
+            "test_dir": _arg(args, "test_dir", None),
+            "k": _arg(args, "k", 16),
+            "train_ratio": _arg(args, "train_ratio", 0.8),
+            "val_ratio": _arg(args, "val_ratio", 0.1),
         },
         "model": {
-            "hidden_dim": getattr(args, "hidden_dim", 256),
-            "num_layers": getattr(args, "num_layers", 4),
-            "dropout": getattr(args, "dropout", 0.15),
-            "conv_type": getattr(args, "conv_type", "gin"),
-            "use_global_ctx": not getattr(args, "no_global_ctx", False),
+            "hidden_dim": _arg(args, "hidden_dim", 256),
+            "num_layers": _arg(args, "num_layers", 4),
+            "dropout": _arg(args, "dropout", 0.15),
+            "conv_type": _arg(args, "conv_type", "gin"),
+            "use_global_ctx": not _arg(args, "no_global_ctx", False),
         },
         "training": {
-            "epochs": getattr(args, "epochs", 150),
-            "batch_size": getattr(args, "batch_size", 16),
-            "lr": getattr(args, "lr", 5e-4),
-            "warmup_epochs": getattr(args, "warmup_epochs", 5),
-            "early_stop_wait": getattr(args, "early_stop_wait", 60),
-            "seed": getattr(args, "seed", 2025),
+            "epochs": _arg(args, "epochs", 150),
+            "batch_size": _arg(args, "batch_size", 16),
+            "lr": _arg(args, "lr", 5e-4),
+            "warmup_epochs": _arg(args, "warmup_epochs", 5),
+            "early_stop_wait": _arg(args, "early_stop_wait", 60),
+            "seed": _arg(args, "seed", 2025),
         },
         "graph": {
-            "type": getattr(args, "graph_type", "knn"),
-            "max_conflict_edges": getattr(args, "max_conflict_edges", None),
+            "type": _arg(args, "graph_type", "knn"),
+            "max_conflict_edges": _arg(args, "max_conflict_edges", None),
         },
         "paths": {
-            "save_path": getattr(args, "save_path", str(default_save_path)),
-            "log_dir": str(Path(getattr(args, "save_path", default_save_path)).parent),
+            "save_path": _arg(args, "save_path", str(default_save_path)),
+            "log_dir": str(Path(_arg(args, "save_path", default_save_path)).parent),
         },
         "decode": {
-            "strategy":   getattr(args, "decode_strategy", DECODE_DEFAULTS["strategy"]),
-            "top_m":      getattr(args, "top_m",           DECODE_DEFAULTS["top_m"]),
-            "beam_width": getattr(args, "beam_width",      DECODE_DEFAULTS["beam_width"]),
+            "strategy":   _arg(args, "decode_strategy", DECODE_DEFAULTS["strategy"]),
+            "top_m":      _arg(args, "top_m",           DECODE_DEFAULTS["top_m"]),
+            "beam_width": _arg(args, "beam_width",      DECODE_DEFAULTS["beam_width"]),
         },
     })

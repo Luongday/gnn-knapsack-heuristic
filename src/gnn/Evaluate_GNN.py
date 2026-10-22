@@ -14,14 +14,14 @@ import numpy as np
 import torch
 
 _HERE = Path(__file__).resolve().parent
-for _p in [str(_HERE), str(_HERE.parent)]:
+for _p in [str(_HERE), str(_HERE.parent), str(_HERE.parents[1])]:
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-from GNNForKnapSack.src.gnn.Knapsack_GNN.model import load_checkpoint
-from GNNForKnapSack.src.gnn.Knapsack_GNN.Graph_builder import build_knapsack_graph_inference
-from GNNForKnapSack.src.core.decode_utils import decode
-from GNNForKnapSack.src.core.instance_loader import load_instance, list_instances
+from src.gnn.Knapsack_GNN.model import load_checkpoint
+from src.gnn.Knapsack_GNN.Graph_builder import build_knapsack_graph_inference
+from src.core.decode_utils import decode
+from src.core.instance_loader import load_instance, list_instances
 
 
 def mark(msg: str) -> None:
@@ -77,7 +77,7 @@ def main() -> None:
         torch.cuda.manual_seed_all(0)
         torch.backends.cudnn.deterministic = True
 
-    from GNNForKnapSack.src.core.config_loader import resolve_device
+    from src.core.config_loader import resolve_device
     device = resolve_device(args.device)
 
     # Load model with dropout=0.0 for deterministic inference
@@ -119,10 +119,6 @@ def main() -> None:
         probs  = torch.sigmoid(logits).detach().cpu()
         gnn_ms = (time.perf_counter() - t0) * 1000.0 # gnn only
 
-        t1 = time.perf_counter()
-        x_hat = decode(probs, W_orig, float(C), ...)
-        dec_ms = (time.perf_counter() - t1) * 1000.0  # ← decode donly
-
         if probs.shape[0] > n:
             mark(f"[WARN] {path.name}: logits has {probs.shape[0]} nodes but n_items={n}. Slicing to n.")
             probs = probs[:n]
@@ -133,11 +129,13 @@ def main() -> None:
         assert probs.shape[0] == n, \
             f"probs length {probs.shape[0]} != n_items {n}"
 
+        t1 = time.perf_counter()
         x_hat    = decode(probs, W_orig, float(C),
                           strategy=args.decode_strategy,
                           values=V_orig,
                           beam_width=args.beam_width,
                           top_m=args.top_m)
+        dec_ms   = (time.perf_counter() - t1) * 1000.0  # decode only
         infer_ms = gnn_ms + dec_ms
 
         total_weight = float((x_hat * W_orig).sum())

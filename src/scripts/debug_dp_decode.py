@@ -4,9 +4,9 @@ import sys
 from pathlib import Path
 sys.path.insert(0, '.')
 
-from GNNForKnapSack.src.core.instance_loader import load_instance
-from GNNForKnapSack.src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp
-from GNNForKnapSack.src.core.decode_utils import greedy_feasible_decode, dp_subset_decode
+from src.core.instance_loader import load_instance
+from src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp
+from src.core.decode_utils import greedy_feasible_decode, dp_subset_decode
 
 # Load 1 instance
 W, V, C = load_instance('C:/Users/Admin/Python/GNNForKnapSack/data/sanity/test/instance_0000.npz')

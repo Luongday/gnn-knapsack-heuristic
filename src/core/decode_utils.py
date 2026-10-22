@@ -69,7 +69,7 @@ def dp_subset_decode(
 
     Guarantees: local optimum within the top-m filtered set.
     """
-    from GNNForKnapSack.src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp
+    from src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp
 
     n = len(probs)
     m = min(top_m, n, max_top_m)
@@ -102,7 +102,7 @@ def dp_subset_decode(
 #     gamma: float = 0.10,
 #     tol: float = 1e-5,
 # ) -> tuple[torch.Tensor, float]:
-#     from GNNForKnapSack.src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp
+#     from src.gnn.Knapsack_GNN.Dp import solve_knapsack_dp
 #
 #     n = probs.shape[0]
 #     device = probs.device
@@ -309,9 +309,9 @@ def diversified_beam_search_decode(
 
     beams = [(0.0, 0.0, torch.zeros(n, dtype=torch.float32))]
 
-    for i in range(n):
+    # Visit items in GNN-probability order so the model output guides the search
+    for i in torch.argsort(probs, descending=True):
         new_beams = []
-        p = float(probs[i])
         w = float(weights[i])
         v = float(values[i])
 
@@ -342,7 +342,8 @@ def diversified_beam_search_decode(
                     break
         beams = unique_beams
 
-    _, _, best_mask = beams[0]
+    # Beams are ranked by penalized score; return the one with the highest real value
+    _, _, best_mask = max(beams, key=lambda b: b[0])
     return best_mask
 
 # ---------------------------------------------------------------------------
@@ -367,7 +368,8 @@ def decode(
         assert values is not None, "values must be provided for greedy_ratio"
         return greedy_ratio_decode(values, weights, capacity, tol)
     elif strategy == "beam_search":
-        return beam_search_decode(scores_or_probs, weights, capacity, beam_width=beam_width, tol=tol)
+        return beam_search_decode(scores_or_probs, weights, capacity,
+                                  values=values, beam_width=beam_width, tol=tol)
     elif strategy == "diversified_beam":
         assert values is not None, "values required for diversified_beam"
         return diversified_beam_search_decode(

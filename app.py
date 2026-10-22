@@ -84,17 +84,17 @@ def _iter_summary_solvers(summary: dict):
 # ---------------------------------------------------------------------------
 @st.cache_resource
 def _load_classical_solvers():
-    from GNNForKnapSack.src.solvers.DP.dp_baseline_eval          import solve_knapsack_dp
-    from GNNForKnapSack.src.solvers.Greedy.greedy_baseline_eval  import solve_knapsack_greedy
-    from GNNForKnapSack.src.solvers.GA.ga_baseline_eval          import solve_knapsack_ga
-    from GNNForKnapSack.src.solvers.BB.bb_baseline_eval          import solve_knapsack_bb
+    from src.solvers.DP.dp_baseline_eval          import solve_knapsack_dp
+    from src.solvers.Greedy.greedy_baseline_eval  import solve_knapsack_greedy
+    from src.solvers.GA.ga_baseline_eval          import solve_knapsack_ga
+    from src.solvers.BB.bb_baseline_eval          import solve_knapsack_bb
     return solve_knapsack_dp, solve_knapsack_greedy, solve_knapsack_ga, solve_knapsack_bb
 
 @st.cache_resource
 def _load_gnn_model(model_path: str, graph_type: str):
     import torch
-    from GNNForKnapSack.src.gnn.Knapsack_GNN.model         import load_checkpoint
-    from GNNForKnapSack.src.gnn.Knapsack_GNN.Graph_builder import build_knapsack_graph_inference
+    from src.gnn.Knapsack_GNN.model         import load_checkpoint
+    from src.gnn.Knapsack_GNN.Graph_builder import build_knapsack_graph_inference
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model  = load_checkpoint(Path(model_path), device=device, dropout=0.0)
     model.eval()
@@ -103,8 +103,8 @@ def _load_gnn_model(model_path: str, graph_type: str):
 @st.cache_resource
 def _load_dqn_model(model_path: str):
     import torch
-    from GNNForKnapSack.src.rl.DQN.dqn_env   import KnapsackEnv
-    from GNNForKnapSack.src.rl.DQN.dqn_model import QNetwork
+    from src.rl.DQN.dqn_env   import KnapsackEnv
+    from src.rl.DQN.dqn_model import QNetwork
     ckpt = torch.load(model_path, map_location="cpu", weights_only=False)
     state_dim  = ckpt.get("state_dim",  14)
     hidden_dim = ckpt.get("hidden_dim", 128)
@@ -180,7 +180,7 @@ def run_gnn(weights, values, capacity, model_path: str, graph_type: str,
             decode_method: str = "greedy", top_m: int = 30, beam_width: int = 5):
     try:
         import torch
-        from GNNForKnapSack.src.core.decode_utils import decode as _decode
+        from src.core.decode_utils import decode as _decode
     except ImportError:
         return _no_torch()
     try:
@@ -245,8 +245,8 @@ def _load_s2v_model(model_path: str):
     _s2v_dir = str(Path(__file__).resolve().parent / "src" / "rl" / "S2V_DQN")
     if _s2v_dir not in _sys.path:
         _sys.path.insert(0, _s2v_dir)
-    from GNNForKnapSack.src.rl.S2V_DQN.s2v_model import load_s2v_checkpoint
-    from GNNForKnapSack.src.rl.S2V_DQN.s2v_env   import GraphKnapsackEnv
+    from src.rl.S2V_DQN.s2v_model import load_s2v_checkpoint
+    from src.rl.S2V_DQN.s2v_env   import GraphKnapsackEnv
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model  = load_s2v_checkpoint(Path(model_path), device=device)
     model.eval()
@@ -293,7 +293,7 @@ def run_reinforce(weights, values, capacity, model_path: str,
                   top_m: int = 30, beam_width: int = 5):
     try:
         import torch
-        from GNNForKnapSack.src.core.decode_utils import decode as _decode
+        from src.core.decode_utils import decode as _decode
     except ImportError:
         return _no_torch()
     try:

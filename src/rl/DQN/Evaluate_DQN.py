@@ -15,13 +15,13 @@ import torch
 
 _HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(_HERE))
-_REPO_PARENT = _HERE.parents[3]
-if str(_REPO_PARENT) not in sys.path:
-    sys.path.insert(0, str(_REPO_PARENT))
+_REPO_ROOT = _HERE.parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
 from dqn_env import KnapsackEnv
 from dqn_model import QNetwork
-from GNNForKnapSack.src.core.instance_loader import load_instance, list_instances
+from src.core.instance_loader import load_instance, list_instances
 
 
 def mark(msg: str):
@@ -112,7 +112,7 @@ def main():
     state_dim  = int(ckpt["state_dim"])
     hidden_dim = int(ckpt.get("hidden_dim", 128))
 
-    from GNNForKnapSack.src.core.config_loader import resolve_device
+    from src.core.config_loader import resolve_device
     device = resolve_device(args.device)
     model = QNetwork(state_dim, hidden_dim=hidden_dim).to(device)
     model.load_state_dict(ckpt["model_state"])

@@ -314,7 +314,7 @@ def main():
             eps = epsilon_by_step(step_count, rl_cfg.eps_start, rl_cfg.eps_end, rl_cfg.eps_decay_steps)
 
             with torch.no_grad():
-                s_dev = s.to(device)
+                s_dev = s.clone().to(device)  # PyG Data.to() is in-place; s is stored in the buffer
                 q = online(s_dev)
 
             action = pick_action_eps_greedy(q, mask, eps, rng)

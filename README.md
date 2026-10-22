@@ -123,6 +123,8 @@ pip install -r Requirements.txt
 
 > **Lưu ý torch-geometric**: nếu `pip install torch-geometric` báo lỗi, cài bằng wheel chính thức theo phiên bản PyTorch và CUDA của bạn. Xem: https://pytorch-geometric.readthedocs.io/en/latest/install/installation.html
 
+> **GPU NVIDIA**: `pip install -r Requirements.txt` có thể cài bản torch CPU. Cài bản CUDA trước, ví dụ `pip install torch --index-url https://download.pytorch.org/whl/cu130`. Card RTX 50xx (Blackwell) cần wheel CUDA ≥ 12.8. Kiểm tra: `python -c "import torch; print(torch.cuda.is_available())"`.
+
 ### 3.4 Verify cài đặt
 
 ```bash

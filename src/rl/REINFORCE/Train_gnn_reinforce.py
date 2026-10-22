@@ -83,14 +83,10 @@ def sample_and_repair(
                 selected[i] = 0
                 total_w -= float(w_cpu[i])
 
-    action_final = selected.to(logits.device)
-
-    eps = 1e-8
-    log_p_per_node = (
-        action_final * torch.log(probs + eps)
-        + (1 - action_final) * torch.log(1 - probs + eps)
-    )
-    log_prob = log_p_per_node.mean()
+    # Score-function gradient must use the action the policy actually sampled;
+    # repair is a deterministic post-processing step folded into the reward.
+    # Sum (not mean) over nodes: joint log-prob of independent Bernoullis.
+    log_prob = torch.distributions.Bernoulli(logits=logits).log_prob(sampled).sum()
 
     value = float((selected * v_cpu).sum())
     return selected, log_prob, value

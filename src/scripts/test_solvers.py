@@ -285,6 +285,27 @@ class TestGraphBuilder:
 
 
 # ---------------------------------------------------------------------------
+# REINFORCE sampling
+# ---------------------------------------------------------------------------
+
+class TestReinforceSample:
+    def test_log_prob_uses_sampled_action_not_repaired(self):
+        import torch
+        from src.rl.REINFORCE.Train_gnn_reinforce import sample_and_repair
+        # Policy is near-certain to take every item; repair drops the
+        # lowest-ratio item (index 2) to get under capacity.
+        logits = torch.full((3,), 20.0)
+        sel, log_p, value = sample_and_repair(
+            logits, torch.tensor(SIMPLE_W, dtype=torch.float32),
+            torch.tensor(SIMPLE_V, dtype=torch.float32), SIMPLE_C,
+        )
+        assert sel.tolist() == [1.0, 1.0, 0.0]
+        assert value == 160
+        # log P(all ones) ~ 0; scoring the repaired action would give ~ -20
+        assert log_p.item() > -1e-3
+
+
+# ---------------------------------------------------------------------------
 # DQN Environment
 # ---------------------------------------------------------------------------
 
